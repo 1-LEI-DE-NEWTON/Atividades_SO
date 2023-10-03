@@ -1,0 +1,24 @@
+Mutex mutex_leitores = criar_mutex()
+Mutex mutex_escritores = criar_mutex()
+int num_leitores = 0
+bool escritor_esperando = falso
+
+Leitor:
+    lock(mutex_leitores)
+    num_leitores++
+    if num_leitores == 1:
+        lock(mutex_escritores)  # Bloqueia escritores se houver leitores
+    unlock(mutex_leitores)
+
+    # Região crítica de leitura
+
+    lock(mutex_leitores)
+    num_leitores--
+    if num_leitores == 0:
+        unlock(mutex_escritores)  # Desbloqueia escritores se não houver mais leitores
+    unlock(mutex_leitores)
+
+Escritor:
+    lock(mutex_escritores)
+    # Região crítica de escrita
+    unlock(mutex_escritores)
